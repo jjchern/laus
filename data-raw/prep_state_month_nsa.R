@@ -24,9 +24,9 @@ labelled::var_label(state_month_nsa) = list(
         pop = "Civilian non-institutional population",
         clf = "Total numer of people in civilian labor force",
         pc_clf = "Labor force participation rate (= labor force / population; Age: 16 years and over)",
-        emp = "The number of people employed",
+        emp = "Total number of people employed",
         pc_emp = "Employment-population ratio (= employment / population; Age: 16 years and over)",
-        unem = "The number of people unemployed",
+        unem = "Total number of people unemployed",
         unem_rate = "Unemployment rate (= unemployment / labor force; Age: 16 years and over)"
 )
 
@@ -34,3 +34,4 @@ labelled::var_label(state_month_nsa) = list(
 
 devtools::use_data(state_month_nsa, overwrite = TRUE)
 unlink(fil)
+unlink("data-raw/ststdnsadata.xlsx")
