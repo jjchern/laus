@@ -10,6 +10,11 @@ An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. B
 -   Employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
 -   Employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
 
+Relevant packages
+-----------------
+
+-   [`rUnemploymentData`](https://github.com/trulia/rUnemploymentData/)
+
 Installation
 ============
 
