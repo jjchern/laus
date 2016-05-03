@@ -6,6 +6,8 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![Travis-CI Build Status](https://travis-ci.org/jjchern/laus.svg?branch=master)](https://travis-ci.org/jjchern/laus)
+
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -28,3 +30,67 @@ An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. B
 # install.package("devtools")
 devtools::install_github("jjchern/laus")
 ```
+
+# Usage
+
+## List all series
+
+```{r}
+data(package = "laus")$results[,3]
+```
+
+## List all variable names and variable labels for `state_year`
+
+```{r}
+names(laus::state_year)
+
+# devtools::install_github("larmarange/labelled")
+labelled::var_label(laus::state_year)
+```
+
+## Show the data frame
+
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+laus::state_year
+```
+
+## Export the data set as a Stata `dta` file
+
+```{r}
+# install.package("haven")
+haven::write_dta(laus::state_year, "dta/state_year.dta")
+```
+
+## Plot a thematic map with the unemployment data
+
+```{r unem-2015-map, warning=FALSE, message=FALSE}
+# 2015 US unemployment rate
+laus::state_year %>% 
+  filter(year == 2015) %>% 
+  select(fips, state, unem_rate) -> unem_2015
+summary(unem_2015$unem_rate)
+
+# Combine state map data with unemployment rate
+# devtools::install_github("jjchern/usmapdata")
+usmapdata::state %>% 
+  inner_join(unem_2015, by = c("id" = "fips")) -> unem_2015
+
+# Plot a Map
+
+library(ggplot2)
+library(viridis)
+
+ggplot() +
+  geom_map(data = unem_2015, map = unem_2015,
+           aes(x = long, y = lat, map_id = id, fill = unem_rate),
+           colour = alpha("white", 0.5), size=0.2) +
+  coord_map("albers", lat0 = 30, lat1 = 40) +
+  scale_fill_viridis(option = "B") +
+  ggtitle("US Unemplyment Rates by State in 2015") +
+  ggthemes::theme_map() +
+  theme(legend.position = c(.85, .3),
+        legend.title=element_blank())
+```
+
+
