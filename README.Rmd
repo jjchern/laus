@@ -1,0 +1,30 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# About
+
+An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. Bureau of Labor Statistics (BLS). So far it contains the following three series:
+
+- Employment status of the civilian noninstitutional population, annual average series (1976-2015)
+- Employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
+- Employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
+
+# Installation
+
+```R
+# install.package("devtools")
+devtools::install_github("jjchern/laus")
+```
