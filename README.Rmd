@@ -11,17 +11,50 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "README-"
+  fig.path = "README/README-fig-",
+  cache.path = "README/README-cache-"
 )
+```
+
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
+library(knitr)
+
+# Borrowed from https://raw.githubusercontent.com/dgrtwo/gganimate/master/README.Rmd
+# GitHub cannot show .mp4s or other animation formats.
+# I therefore hacked together a GIF animation hook for knitr.
+
+library(animation)
+ani.options(autobrowse = FALSE, interval = 1)
+
+opts_knit$set(animation.fun = function(x, options, format = "gif") {
+  x = c(knitr:::sans_ext(x), knitr:::file_ext(x))
+  fig.num = options$fig.num
+  format = sub("^[.]", "", format)
+  fig.fname = paste0(sub(paste0(fig.num, "$"), "*", x[1]), 
+                     ".", x[2])
+  mov.fname = paste0(sub(paste0(fig.num, "$"), "", x[1]), ".", 
+                     format)
+
+  # order correctly
+  figs <- Sys.glob(fig.fname)
+  figs <- figs[order(as.numeric(stringr::str_match(figs, paste0("(\\d+)\\.", x[2]))[, 2]))]
+
+  animation::im.convert(figs, output = mov.fname)
+  
+  sprintf("![%s](%s)", options$label, paste0(opts_knit$get("base.url"), mov.fname))
+})
+
+opts_chunk$set(cache = TRUE, message = FALSE, warning = FALSE, fig.show = "animate")
 ```
 
 # About
 
-An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. Bureau of Labor Statistics (BLS). So far it contains the following three series:
+An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. Bureau of Labor Statistics (BLS). So far it contains the following four series:
 
-- Employment status of the civilian noninstitutional population, annual average series (1976-2015)
-- Employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
-- Employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
+- `state_year`: State-level employment status of the civilian noninstitutional population, annual average series (1976-2015)
+- `state_month_sa`: State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
+- `state_month_nsa`: State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
+- `county_year`: County-level employment status of the civilian noninstitutional population, annual average series (1990-2015)
 
 ## Relevant packages
 
@@ -56,11 +89,12 @@ labelled::var_label(laus::state_year)
 ```{r}
 library(dplyr, warn.conflicts = FALSE)
 laus::state_year
+laus::county_year
 ```
 
 ## Plot a thematic map with the unemployment data
 
-```{r unem-2015-map, warning=FALSE, message=FALSE}
+```{r unem-2015-map}
 # 2015 US unemployment rate
 laus::state_year %>% 
   filter(year == 2015) %>% 
@@ -70,23 +104,26 @@ summary(unem_2015$unem_rate)
 # Combine state map data with unemployment rate
 # devtools::install_github("jjchern/usmapdata")
 usmapdata::state %>% 
-  inner_join(unem_2015, by = c("id" = "fips")) -> unem_2015
+  inner_join(laus::state_year, by = c("id" = "fips")) -> unem
 
 # Plot a Map
 
 library(ggplot2)
-library(viridis)
+library(gganimate)
 
 ggplot() +
-  geom_map(data = unem_2015, map = unem_2015,
-           aes(x = long, y = lat, map_id = id, fill = unem_rate),
+  geom_map(data = unem, map = unem,
+           aes(x = long, y = lat, map_id = id, fill = unem_rate, frame = year),
            colour = alpha("white", 0.5), size=0.2) +
   coord_map("albers", lat0 = 30, lat1 = 40) +
-  scale_fill_viridis(option = "B") +
-  ggtitle("US Unemplyment Rates by State in 2015") +
+  viridis::scale_fill_viridis(option = "B") +
+  ggtitle("US Unemplyment Rates by State in ") +
   ggthemes::theme_map() +
   theme(legend.position = c(.85, .3),
-        legend.title=element_blank())
+        legend.title=element_blank(), 
+        plot.title = element_text(hjust = 0.5)) -> g
+
+gganimate(g)
 ```
 
 

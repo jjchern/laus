@@ -1,3 +1,6 @@
 .Rproj.user
 .Rhistory
 .RData
+README/README-cache*
+README/README-fig*png
+*cache*

@@ -5,11 +5,12 @@
 About
 =====
 
-An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. Bureau of Labor Statistics (BLS). So far it contains the following three series:
+An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. Bureau of Labor Statistics (BLS). So far it contains the following four series:
 
--   Employment status of the civilian noninstitutional population, annual average series (1976-2015)
--   Employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
--   Employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
+-   `state_year`: State-level employment status of the civilian noninstitutional population, annual average series (1976-2015)
+-   `state_month_sa`: State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
+-   `state_month_nsa`: State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
+-   `county_year`: County-level employment status of the civilian noninstitutional population, annual average series (1990-2015)
 
 Relevant packages
 -----------------
@@ -32,7 +33,7 @@ List all series
 
 ``` r
 data(package = "laus")$results[,3]
-#> [1] "state_month_nsa" "state_month_sa"  "state_year"
+#> [1] "county_year"     "state_month_nsa" "state_month_sa"  "state_year"
 ```
 
 List all variable names and variable labels for `state_year`
@@ -97,6 +98,22 @@ laus::state_year
 #> 10    11 District of Columbia  1976   517250  335284   64.8  305107   59.0
 #> # ... with 2,110 more rows, and 2 more variables: unem <dbl>,
 #> #   unem_rate <dbl>
+laus::county_year
+#> # A tibble: 83,650 × 10
+#>          laus_code state_fips county_fips          county state  year
+#>              <chr>      <chr>       <chr>           <chr> <chr> <chr>
+#> 1  CN0100100000000         01         001  Autauga County    AL  1990
+#> 2  CN0100300000000         01         003  Baldwin County    AL  1990
+#> 3  CN0100500000000         01         005  Barbour County    AL  1990
+#> 4  CN0100700000000         01         007     Bibb County    AL  1990
+#> 5  CN0100900000000         01         009   Blount County    AL  1990
+#> 6  CN0101100000000         01         011  Bullock County    AL  1990
+#> 7  CN0101300000000         01         013   Butler County    AL  1990
+#> 8  CN0101500000000         01         015  Calhoun County    AL  1990
+#> 9  CN0101700000000         01         017 Chambers County    AL  1990
+#> 10 CN0101900000000         01         019 Cherokee County    AL  1990
+#> # ... with 83,640 more rows, and 4 more variables: labor_force <dbl>,
+#> #   employed <dbl>, unemployed <dbl>, unemployment_rate <dbl>
 ```
 
 Plot a thematic map with the unemployment data
@@ -114,23 +131,26 @@ summary(unem_2015$unem_rate)
 # Combine state map data with unemployment rate
 # devtools::install_github("jjchern/usmapdata")
 usmapdata::state %>% 
-  inner_join(unem_2015, by = c("id" = "fips")) -> unem_2015
+  inner_join(laus::state_year, by = c("id" = "fips")) -> unem
 
 # Plot a Map
 
 library(ggplot2)
-library(viridis)
+library(gganimate)
 
 ggplot() +
-  geom_map(data = unem_2015, map = unem_2015,
-           aes(x = long, y = lat, map_id = id, fill = unem_rate),
+  geom_map(data = unem, map = unem,
+           aes(x = long, y = lat, map_id = id, fill = unem_rate, frame = year),
            colour = alpha("white", 0.5), size=0.2) +
   coord_map("albers", lat0 = 30, lat1 = 40) +
-  scale_fill_viridis(option = "B") +
-  ggtitle("US Unemplyment Rates by State in 2015") +
+  viridis::scale_fill_viridis(option = "B") +
+  ggtitle("US Unemplyment Rates by State in ") +
   ggthemes::theme_map() +
   theme(legend.position = c(.85, .3),
-        legend.title=element_blank())
+        legend.title=element_blank(), 
+        plot.title = element_text(hjust = 0.5)) -> g
+
+gganimate(g)
 ```
 
-![](README-unem-2015-map-1.png)
+![unem-2015-map](README/README-fig-unem-2015-map-.gif)
