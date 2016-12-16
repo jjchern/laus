@@ -63,13 +63,13 @@ labelled::var_label(laus::state_year)
 #> [1] "Labor force participation rate (= labor force / population; Age: 16 years and over)"
 #> 
 #> $emp
-#> [1] "The number of people employed"
+#> [1] "Total number of people employed"
 #> 
 #> $pc_emp
 #> [1] "Employment-population ratio (= employment / population; Age: 16 years and over)"
 #> 
 #> $unem
-#> [1] "The number of people unemployed"
+#> [1] "Total number of people unemployed"
 #> 
 #> $unem_rate
 #> [1] "Unemployment rate (= unemployment / labor force; Age: 16 years and over)"
@@ -81,10 +81,9 @@ Show the data frame
 ``` r
 library(dplyr, warn.conflicts = FALSE)
 laus::state_year
-#> Source: local data frame [2,120 x 10]
-#> 
+#> # A tibble: 2,120 × 10
 #>     fips                state  year      pop     clf pc_clf     emp pc_emp
-#>    (chr)                (chr) (chr)    (dbl)   (dbl)  (dbl)   (dbl)  (dbl)
+#>    <chr>                <chr> <chr>    <dbl>   <dbl>  <dbl>   <dbl>  <dbl>
 #> 1     01              Alabama  1976  2632667 1501284   57.0 1399080   53.1
 #> 2     02               Alaska  1976   239917  163570   68.2  151190   63.0
 #> 3     04              Arizona  1976  1650917  987060   59.8  890988   54.0
@@ -95,16 +94,8 @@ laus::state_year
 #> 8     09          Connecticut  1976  2260083 1455740   64.4 1320510   58.4
 #> 9     10             Delaware  1976   420667  264791   62.9  241614   57.4
 #> 10    11 District of Columbia  1976   517250  335284   64.8  305107   59.0
-#> ..   ...                  ...   ...      ...     ...    ...     ...    ...
-#> Variables not shown: unem (dbl), unem_rate (dbl)
-```
-
-Export the data set as a Stata `dta` file
------------------------------------------
-
-``` r
-# install.package("haven")
-haven::write_dta(laus::state_year, "dta/state_year.dta")
+#> # ... with 2,110 more rows, and 2 more variables: unem <dbl>,
+#> #   unem_rate <dbl>
 ```
 
 Plot a thematic map with the unemployment data

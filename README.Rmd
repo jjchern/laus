@@ -59,13 +59,6 @@ library(dplyr, warn.conflicts = FALSE)
 laus::state_year
 ```
 
-## Export the data set as a Stata `dta` file
-
-```{r}
-# install.package("haven")
-haven::write_dta(laus::state_year, "dta/state_year.dta")
-```
-
 ## Plot a thematic map with the unemployment data
 
 ```{r unem-2015-map, warning=FALSE, message=FALSE}
