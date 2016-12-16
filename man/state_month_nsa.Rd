@@ -10,7 +10,7 @@
 * `year` = "Year",
 * `month` = "Month",
 * `pop` = "Civilian non-institutional population",
-* `clf` = "Total numer of people in civilian labor force",
+* `clf` = "Total number of people in civilian labor force",
 * `pc_clf` = "Labor force participation rate (= labor force / population; Age: 16 years and over)",
 * `emp` = "Total number of people employed",
 * `pc_emp` = "Employment-population ratio (= employment / population; Age: 16 years and over)",
