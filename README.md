@@ -7,10 +7,14 @@ About
 
 An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. Bureau of Labor Statistics (BLS). So far it contains the following four series:
 
--   `state_year`: State-level employment status of the civilian noninstitutional population, annual average series (1976-2015)
--   `state_month_sa`: State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
--   `state_month_nsa`: State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
--   `county_year`: County-level employment status of the civilian noninstitutional population, annual average series (1990-2015)
+-   `state_year`:
+    -   State-level employment status of the civilian noninstitutional population, annual average series (1976-2015)
+-   `state_month_sa`:
+    -   State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
+-   `state_month_nsa`:
+    -   State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
+-   `county_year`:
+    -   County-level employment status of the civilian noninstitutional population, annual average series (1990-2015)
 
 Relevant packages
 -----------------
@@ -81,7 +85,7 @@ Show the data frame
 -------------------
 
 ``` r
-library(dplyr, warn.conflicts = FALSE)
+library(tidyverse)
 laus::state_year
 #> # A tibble: 2,120 × 10
 #>     fips                state  year      pop     clf pc_clf     emp pc_emp
@@ -99,35 +103,28 @@ laus::state_year
 #> # ... with 2,110 more rows, and 2 more variables: unem <dbl>,
 #> #   unem_rate <dbl>
 laus::county_year
-#> # A tibble: 83,650 × 10
-#>          laus_code state_fips county_fips          county state  year
-#>              <chr>      <chr>       <chr>           <chr> <chr> <chr>
-#> 1  CN0100100000000         01         001  Autauga County    AL  1990
-#> 2  CN0100300000000         01         003  Baldwin County    AL  1990
-#> 3  CN0100500000000         01         005  Barbour County    AL  1990
-#> 4  CN0100700000000         01         007     Bibb County    AL  1990
-#> 5  CN0100900000000         01         009   Blount County    AL  1990
-#> 6  CN0101100000000         01         011  Bullock County    AL  1990
-#> 7  CN0101300000000         01         013   Butler County    AL  1990
-#> 8  CN0101500000000         01         015  Calhoun County    AL  1990
-#> 9  CN0101700000000         01         017 Chambers County    AL  1990
-#> 10 CN0101900000000         01         019 Cherokee County    AL  1990
-#> # ... with 83,640 more rows, and 4 more variables: labor_force <dbl>,
-#> #   employed <dbl>, unemployed <dbl>, unemployment_rate <dbl>
+#> # A tibble: 83,650 × 11
+#>          laus_code  fips state_fips county_fips          county state
+#>              <chr> <chr>      <chr>       <chr>           <chr> <chr>
+#> 1  CN0100100000000 01001         01         001  Autauga County    AL
+#> 2  CN0100300000000 01003         01         003  Baldwin County    AL
+#> 3  CN0100500000000 01005         01         005  Barbour County    AL
+#> 4  CN0100700000000 01007         01         007     Bibb County    AL
+#> 5  CN0100900000000 01009         01         009   Blount County    AL
+#> 6  CN0101100000000 01011         01         011  Bullock County    AL
+#> 7  CN0101300000000 01013         01         013   Butler County    AL
+#> 8  CN0101500000000 01015         01         015  Calhoun County    AL
+#> 9  CN0101700000000 01017         01         017 Chambers County    AL
+#> 10 CN0101900000000 01019         01         019 Cherokee County    AL
+#> # ... with 83,640 more rows, and 5 more variables: year <chr>,
+#> #   labor_force <dbl>, employed <dbl>, unemployed <dbl>,
+#> #   unemployment_rate <dbl>
 ```
 
 Plot a thematic map with the unemployment data
 ----------------------------------------------
 
 ``` r
-# 2015 US unemployment rate
-laus::state_year %>% 
-  filter(year == 2015) %>% 
-  select(fips, state, unem_rate) -> unem_2015
-summary(unem_2015$unem_rate)
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>   2.700   4.200   5.200   5.085   5.900   6.900
-
 # Combine state map data with unemployment rate
 # devtools::install_github("jjchern/usmapdata")
 usmapdata::state %>% 
@@ -135,7 +132,6 @@ usmapdata::state %>%
 
 # Plot a Map
 
-library(ggplot2)
 library(gganimate)
 
 ggplot() +
@@ -144,7 +140,7 @@ ggplot() +
            colour = alpha("white", 0.5), size=0.2) +
   coord_map("albers", lat0 = 30, lat1 = 40) +
   viridis::scale_fill_viridis(option = "B") +
-  ggtitle("US Unemplyment Rates by State in ") +
+  ggtitle("US Unemplyment Rates (%) by State in") +
   ggthemes::theme_map() +
   theme(legend.position = c(.85, .3),
         legend.title=element_blank(), 
@@ -154,3 +150,24 @@ gganimate(g)
 ```
 
 ![unem-2015-map](README/README-fig-unem-2015-map-.gif)
+
+``` r
+usmapdata::county %>% 
+        inner_join(laus::county_year, by = c("id" = "fips")) -> unem_county
+
+ggplot() +
+  geom_map(data = unem_county, map = unem_county,
+           aes(x = long, y = lat, map_id = id, fill = unemployment_rate, frame = year),
+           colour = alpha("white", 0.1), size=0.2) +
+  coord_map("albers", lat0 = 30, lat1 = 40) +
+  viridis::scale_fill_viridis(option = "B") +
+  ggtitle("US Unemplyment Rates (%) by County in") +
+  ggthemes::theme_map() +
+  theme(legend.position = c(.85, .3),
+        legend.title=element_blank(), 
+        plot.title = element_text(hjust = 0.5)) -> c
+
+gganimate(c)
+```
+
+![unnamed-chunk-6](README/README-fig-unnamed-chunk-6-.gif)

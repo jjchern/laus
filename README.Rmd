@@ -51,10 +51,14 @@ opts_chunk$set(cache = TRUE, message = FALSE, warning = FALSE, fig.show = "anima
 
 An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. Bureau of Labor Statistics (BLS). So far it contains the following four series:
 
-- `state_year`: State-level employment status of the civilian noninstitutional population, annual average series (1976-2015)
-- `state_month_sa`: State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
-- `state_month_nsa`: State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
-- `county_year`: County-level employment status of the civilian noninstitutional population, annual average series (1990-2015)
+- `state_year`: 
+    - State-level employment status of the civilian noninstitutional population, annual average series (1976-2015)
+- `state_month_sa`: 
+    - State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
+- `state_month_nsa`: 
+    - State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
+- `county_year`: 
+    - County-level employment status of the civilian noninstitutional population, annual average series (1990-2015)
 
 ## Relevant packages
 
@@ -87,7 +91,7 @@ labelled::var_label(laus::state_year)
 ## Show the data frame
 
 ```{r}
-library(dplyr, warn.conflicts = FALSE)
+library(tidyverse)
 laus::state_year
 laus::county_year
 ```
@@ -95,12 +99,6 @@ laus::county_year
 ## Plot a thematic map with the unemployment data
 
 ```{r unem-2015-map}
-# 2015 US unemployment rate
-laus::state_year %>% 
-  filter(year == 2015) %>% 
-  select(fips, state, unem_rate) -> unem_2015
-summary(unem_2015$unem_rate)
-
 # Combine state map data with unemployment rate
 # devtools::install_github("jjchern/usmapdata")
 usmapdata::state %>% 
@@ -108,7 +106,6 @@ usmapdata::state %>%
 
 # Plot a Map
 
-library(ggplot2)
 library(gganimate)
 
 ggplot() +
@@ -117,13 +114,32 @@ ggplot() +
            colour = alpha("white", 0.5), size=0.2) +
   coord_map("albers", lat0 = 30, lat1 = 40) +
   viridis::scale_fill_viridis(option = "B") +
-  ggtitle("US Unemplyment Rates by State in ") +
+  ggtitle("US Unemplyment Rates (%) by State in") +
   ggthemes::theme_map() +
   theme(legend.position = c(.85, .3),
         legend.title=element_blank(), 
         plot.title = element_text(hjust = 0.5)) -> g
 
 gganimate(g)
+```
+
+```{r}
+usmapdata::county %>% 
+        inner_join(laus::county_year, by = c("id" = "fips")) -> unem_county
+
+ggplot() +
+  geom_map(data = unem_county, map = unem_county,
+           aes(x = long, y = lat, map_id = id, fill = unemployment_rate, frame = year),
+           colour = alpha("white", 0.1), size=0.2) +
+  coord_map("albers", lat0 = 30, lat1 = 40) +
+  viridis::scale_fill_viridis(option = "B") +
+  ggtitle("US Unemplyment Rates (%) by County in") +
+  ggthemes::theme_map() +
+  theme(legend.position = c(.85, .3),
+        legend.title=element_blank(), 
+        plot.title = element_text(hjust = 0.5)) -> c
+
+gganimate(c)
 ```
 
 
