@@ -26,7 +26,8 @@ tidy <- . %>%
                unemployed = X8,
                unemployment_rate = X9) %>%
         separate(county, c("county", "state"), sep = ", ") %>% # Doesn't work for DC
-        mutate(state = if_else(county == "District of Columbia", "DC", state))
+        mutate(state = if_else(county == "District of Columbia", "DC", state)) %>%
+        unite(fips, state_fips, county_fips, sep = "", remove = FALSE)
 
 map(fils, tidy) %>% map(head) # Warnings are either about DC or missing values
 

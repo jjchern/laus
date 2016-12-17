@@ -63,6 +63,7 @@
 #'
 #' @format A data frame with ten variables:
 #' * `laus_code` = "LAUS Code",
+#' * `fips` = "County FIPS",
 #' * `state_fips` = "State FIPS Code",
 #' * `county_fips` = "County FIPS Code",
 #' * `county` = "County Name",
