@@ -68,7 +68,7 @@ An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. B
 
 ```R
 # install.package("devtools")
-devtools::install_github("jjchern/laus")
+devtools::install_github("jjchern/laus@v0.0.1")
 ```
 
 # Usage

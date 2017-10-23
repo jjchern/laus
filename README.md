@@ -26,7 +26,7 @@ Installation
 
 ``` r
 # install.package("devtools")
-devtools::install_github("jjchern/laus")
+devtools::install_github("jjchern/laus@v0.0.1")
 ```
 
 Usage
