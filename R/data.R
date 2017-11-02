@@ -57,7 +57,7 @@
 #' @source [http://www.bls.gov/lau/rdscnp16.htm]()
 "state_month_nsa"
 
-#' @title County by month level US employment data
+#' @title County-Year
 #'
 #' @description Annual series of US county employment data
 #'
@@ -76,3 +76,11 @@
 #'
 #' @source [https://www.bls.gov/lau/]()
 "county_year"
+
+#' @title County-Month
+#'
+#' @description Monthly series (not seasonly adjusted) of employment status of the civilian noninstitutional population from BLS.
+#'
+#'
+#' @source [https://www.bls.gov/lau/]()
+"county_month_nsa"

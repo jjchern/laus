@@ -25,4 +25,3 @@ state_year
 Annual averages series of employment status of the civilian noninstitutional population from BLS.
 }
 \keyword{datasets}
-

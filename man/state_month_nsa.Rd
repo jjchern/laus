@@ -26,4 +26,3 @@ state_month_nsa
 Monthly series (not seasonly adjusted) of employment status of the civilian noninstitutional population from BLS.
 }
 \keyword{datasets}
-

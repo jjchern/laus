@@ -3,7 +3,7 @@
 \docType{data}
 \name{county_year}
 \alias{county_year}
-\title{County by month level US employment data}
+\title{County-Year}
 \format{A data frame with ten variables:
 * `laus_code` = "LAUS Code",
 * `fips` = "County FIPS",
@@ -26,4 +26,3 @@ county_year
 Annual series of US county employment data
 }
 \keyword{datasets}
-
