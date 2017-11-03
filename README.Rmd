@@ -1,5 +1,7 @@
 ---
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -16,10 +18,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, echo = FALSE, warning=FALSE, message=FALSE}
+```{r echo = FALSE, cache = FALSE}
 library(knitr)
 
-# Borrowed from https://raw.githubusercontent.com/dgrtwo/gganimate/master/README.Rmd
+# I want the README to have visible GIFs on GitHub, as
 # GitHub cannot show .mp4s or other animation formats.
 # I therefore hacked together a GIF animation hook for knitr.
 
@@ -59,6 +61,8 @@ An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. B
     - State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
 - `county_year`: 
     - County-level employment status of the civilian noninstitutional population, annual average series (1990-2015)
+- `county_month_nsa`:
+    - County-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
 
 ## Relevant packages
 
@@ -68,7 +72,7 @@ An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. B
 
 ```R
 # install.package("devtools")
-devtools::install_github("jjchern/laus@v0.0.1")
+devtools::install_github("jjchern/laus@v0.0.2")
 ```
 
 # Usage
@@ -96,9 +100,9 @@ laus::state_year
 laus::county_year
 ```
 
-## Plot a thematic map with the unemployment data
+## Plot thematic maps with the unemployment data
 
-```{r unem-2015-map}
+```{r unem-2015-map, echo=FALSE}
 # Combine state map data with unemployment rate
 # devtools::install_github("jjchern/usmapdata")
 usmapdata::state %>% 
@@ -123,7 +127,7 @@ ggplot() +
 gganimate(g)
 ```
 
-```{r}
+```{r unem-2015-map-county, echo=FALSE}
 usmapdata::county %>% 
         inner_join(laus::county_year, by = c("id" = "fips")) -> unem_county
 
@@ -145,4 +149,56 @@ ggplot() +
 gganimate(c)
 ```
 
+## Plot selected Series
 
+```{r ts_unem_03_12_mon, fig.show='asis', echo=FALSE}
+laus::county_month_nsa %>%
+    filter(year %in% c(2002:2011)) %>%
+    filter(fips %in%
+        c("17031", "36005", "42069", "11001")) %>%
+    mutate(date = glue::glue("{year}-{month}-01")) %>%
+    mutate(date = as.Date(date)) %>%
+    mutate(county_name = paste0(county, ", ", state)) %>%
+    ggplot(aes(x = date, y = `unemployment rate`,
+               colour = county_name)) +
+    geom_line() +
+    annotate("rect",
+             xmin = as.Date("2003-01-01"), xmax = as.Date("2004-12-01"),
+             ymin = 4, ymax = Inf, alpha = 0.1) +
+    annotate("rect",
+             xmin = as.Date("2008-01-01"), xmax = as.Date("2010-12-01"),
+             ymin = 4, ymax = Inf, alpha = 0.1) +
+    labs(x = NULL, y = NULL,
+         title = "Unemployment Rates of Selected Counties, 2002-2011") +
+    hrbrmisc::theme_hrbrmstr_sk(
+        strip_text_family = "Skia-Regular_Light-Condensed") +
+    theme(legend.position = c(0.45, 0.8),
+          legend.title = element_blank(),
+          strip.text = element_text(hjust = 0.45))
+```
+
+```{r ts_unem_03_12_ann, fig.show='asis', echo=FALSE}
+laus::county_year %>%
+    mutate(year = as.numeric(year)) %>% 
+    filter(year %in% c(2002:2011)) %>%
+    filter(fips %in%
+        c("17031", "36005", "42069", "11001")) %>%
+    mutate(date = glue::glue("{year}-01-01")) %>%
+    mutate(date = as.Date(date)) %>%
+    mutate(county_name = paste0(county, ", ", state)) %>%
+    rename(`unemployment rate` = unemployment_rate) %>% 
+    ggplot(aes(x = date, y = `unemployment rate`,
+               colour = county_name)) +
+    geom_line() +
+    annotate("rect",
+             xmin = as.Date("2003-01-01"), xmax = as.Date("2004-01-01"),
+             ymin = 4, ymax = Inf, alpha = 0.1) +
+    annotate("rect",
+             xmin = as.Date("2008-01-01"), xmax = as.Date("2010-01-01"),
+             ymin = 4, ymax = Inf, alpha = 0.1) +
+    labs(x = NULL, y = NULL,
+         title = "Unemployment Rates of Selected Counties, 2002-2011") +
+    hrbrmisc::theme_hrbrmstr_sk() +
+    theme(legend.position = c(0.45, 0.8),
+          legend.title = element_blank())
+```
