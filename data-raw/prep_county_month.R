@@ -1,5 +1,5 @@
 
-# Labor force data by county, annual averages, 1990-2015
+# Labor force data by county, annual averages, 1990-2017.10
 
 library(tidyverse)
 
