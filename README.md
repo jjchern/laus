@@ -8,15 +8,15 @@ About
 An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. Bureau of Labor Statistics (BLS). So far it contains the following four series:
 
 -   `state_year`:
-    -   State-level employment status of the civilian noninstitutional population, annual average series (1976-2015)
+    -   State-level employment status of the civilian noninstitutional population, annual average series (1976-2016)
 -   `state_month_sa`:
-    -   State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2015)
+    -   State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2017.11)
 -   `state_month_nsa`:
-    -   State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
+    -   State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2017.11)
 -   `county_year`:
-    -   County-level employment status of the civilian noninstitutional population, annual average series (1990-2015)
+    -   County-level employment status of the civilian noninstitutional population, annual average series (1990-2016)
 -   `county_month_nsa`:
-    -   County-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2015)
+    -   County-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2017.10)
 
 Relevant packages
 -----------------
@@ -28,7 +28,7 @@ Installation
 
 ``` r
 # install.package("devtools")
-devtools::install_github("jjchern/laus@v0.0.2")
+devtools::install_github("jjchern/laus@v0.0.3")
 ```
 
 Usage

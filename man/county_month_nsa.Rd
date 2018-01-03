@@ -4,7 +4,7 @@
 \name{county_month_nsa}
 \alias{county_month_nsa}
 \title{County-Month}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 1071399 rows and 16 columns.}
+\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 1074621 rows and 16 columns.}
 \source{
 [https://www.bls.gov/lau/]()
 }
