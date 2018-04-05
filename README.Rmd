@@ -102,7 +102,7 @@ laus::county_year
 
 ## Plot thematic maps with the unemployment data
 
-```{r unem-2015-map, echo=FALSE}
+```{r state-map, echo=FALSE}
 # Combine state map data with unemployment rate
 # devtools::install_github("jjchern/usmapdata")
 usmapdata::state %>% 
@@ -127,7 +127,7 @@ ggplot() +
 gganimate(g)
 ```
 
-```{r unem-2015-map-county, echo=FALSE}
+```{r county-map, echo=FALSE}
 usmapdata::county %>% 
         inner_join(laus::county_year, by = c("id" = "fips")) -> unem_county
 
