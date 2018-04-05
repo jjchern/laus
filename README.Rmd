@@ -102,52 +102,56 @@ laus::county_year
 
 ## Plot thematic maps with the unemployment data
 
-```{r state-map, echo=FALSE}
-# Combine state map data with unemployment rate
-# devtools::install_github("jjchern/usmapdata")
-usmapdata::state %>% 
-  inner_join(laus::state_year, by = c("id" = "fips")) -> unem
+<!-- # ```{r state-map, echo=FALSE} -->
+<!-- # # Combine state map data with unemployment rate -->
+<!-- # # devtools::install_github("jjchern/usmapdata") -->
+<!-- # usmapdata::state %>%  -->
+<!-- #   inner_join(laus::state_year, by = c("id" = "fips")) -> unem -->
+<!-- #  -->
+<!-- # # Plot a Map -->
+<!-- #  -->
+<!-- # library(gganimate) -->
+<!-- #  -->
+<!-- # ggplot() + -->
+<!-- #   geom_map(data = unem, map = unem, -->
+<!-- #            aes(x = long, y = lat, map_id = id, fill = unem_rate, frame = year), -->
+<!-- #            colour = alpha("white", 0.5), size=0.2) + -->
+<!-- #   coord_map("albers", lat0 = 30, lat1 = 40) + -->
+<!-- #   viridis::scale_fill_viridis(option = "B") + -->
+<!-- #   ggtitle("US Unemplyment Rates (%) by State in") + -->
+<!-- #   ggthemes::theme_map() + -->
+<!-- #   theme(legend.position = c(.85, .3), -->
+<!-- #         legend.title=element_blank(),  -->
+<!-- #         plot.title = element_text(hjust = 0.5)) -> g -->
+<!-- #  -->
+<!-- # gganimate(g) -->
+<!-- # ``` -->
 
-# Plot a Map
+![state-map](README/README-fig-state-map-.gif)
 
-library(gganimate)
+<!-- # ```{r county-map, echo=FALSE} -->
+<!-- # usmapdata::county %>%  -->
+<!-- #         inner_join(laus::county_year, by = c("id" = "fips")) -> unem_county -->
+<!-- #  -->
+<!-- # ggplot() + -->
+<!-- #   geom_map(data = unem_county, map = unem_county, -->
+<!-- #            aes(x = long, y = lat, map_id = id, fill = unemployment_rate, frame = year), -->
+<!-- #            colour = alpha("white", 0.1), size=0.2) + -->
+<!-- #   geom_map(data = usmapdata::state, map = usmapdata::state, -->
+<!-- #            aes(x = long, y = lat, map_id = id), -->
+<!-- #            colour = alpha("white", 0.75), fill = "NA") +         -->
+<!-- #   coord_map("albers", lat0 = 30, lat1 = 40) + -->
+<!-- #   viridis::scale_fill_viridis(option = "B") + -->
+<!-- #   ggtitle("US Unemplyment Rates (%) by County in") + -->
+<!-- #   ggthemes::theme_map() + -->
+<!-- #   theme(legend.position = c(.85, .3), -->
+<!-- #         legend.title=element_blank(),  -->
+<!-- #         plot.title = element_text(hjust = 0.5)) -> c -->
+<!-- #  -->
+<!-- # gganimate(c) -->
+<!-- # ``` -->
 
-ggplot() +
-  geom_map(data = unem, map = unem,
-           aes(x = long, y = lat, map_id = id, fill = unem_rate, frame = year),
-           colour = alpha("white", 0.5), size=0.2) +
-  coord_map("albers", lat0 = 30, lat1 = 40) +
-  viridis::scale_fill_viridis(option = "B") +
-  ggtitle("US Unemplyment Rates (%) by State in") +
-  ggthemes::theme_map() +
-  theme(legend.position = c(.85, .3),
-        legend.title=element_blank(), 
-        plot.title = element_text(hjust = 0.5)) -> g
-
-gganimate(g)
-```
-
-```{r county-map, echo=FALSE}
-usmapdata::county %>% 
-        inner_join(laus::county_year, by = c("id" = "fips")) -> unem_county
-
-ggplot() +
-  geom_map(data = unem_county, map = unem_county,
-           aes(x = long, y = lat, map_id = id, fill = unemployment_rate, frame = year),
-           colour = alpha("white", 0.1), size=0.2) +
-  geom_map(data = usmapdata::state, map = usmapdata::state,
-           aes(x = long, y = lat, map_id = id),
-           colour = alpha("white", 0.75), fill = "NA") +        
-  coord_map("albers", lat0 = 30, lat1 = 40) +
-  viridis::scale_fill_viridis(option = "B") +
-  ggtitle("US Unemplyment Rates (%) by County in") +
-  ggthemes::theme_map() +
-  theme(legend.position = c(.85, .3),
-        legend.title=element_blank(), 
-        plot.title = element_text(hjust = 0.5)) -> c
-
-gganimate(c)
-```
+![county-map](README/README-fig-county-map-.gif)
 
 ## Plot selected Series
 
@@ -179,25 +183,25 @@ laus::county_month_nsa %>%
 
 ```{r ts_unem_03_12_ann, fig.show='asis', echo=FALSE}
 laus::county_year %>%
-    mutate(year = as.numeric(year)) %>% 
+    mutate(year = as.numeric(year)) %>%
     filter(year %in% c(2002:2011)) %>%
     filter(fips %in%
         c("17031", "36005", "42069", "11001")) %>%
     mutate(date = glue::glue("{year}-01-01")) %>%
     mutate(date = as.Date(date)) %>%
     mutate(county_name = paste0(county, ", ", state)) %>%
-    rename(`unemployment rate` = unemployment_rate) %>% 
+    rename(`unemployment rate` = unemployment_rate) %>%
     ggplot(aes(x = date, y = `unemployment rate`,
-               colour = county_name)) +
+            colour = county_name)) +
     geom_line() +
     annotate("rect",
-             xmin = as.Date("2003-01-01"), xmax = as.Date("2004-01-01"),
-             ymin = 4, ymax = Inf, alpha = 0.1) +
+          xmin = as.Date("2003-01-01"), xmax = as.Date("2004-01-01"),
+              ymin = 4, ymax = Inf, alpha = 0.1) +
     annotate("rect",
-             xmin = as.Date("2008-01-01"), xmax = as.Date("2010-01-01"),
-             ymin = 4, ymax = Inf, alpha = 0.1) +
+              xmin = as.Date("2008-01-01"), xmax = as.Date("2010-01-01"),
+              ymin = 4, ymax = Inf, alpha = 0.1) +
     labs(x = NULL, y = NULL,
-         title = "Unemployment Rates of Selected Counties, 2002-2011") +
+          title = "Unemployment Rates of Selected Counties, 2002-2011") +
     hrbrmisc::theme_hrbrmstr_sk() +
     theme(legend.position = c(0.45, 0.8),
           legend.title = element_blank())

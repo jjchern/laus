@@ -130,7 +130,97 @@ laus::county_year
 
 ## Plot thematic maps with the unemployment data
 
+<!-- # ```{r state-map, echo=FALSE} -->
+
+<!-- # # Combine state map data with unemployment rate -->
+
+<!-- # # devtools::install_github("jjchern/usmapdata") -->
+
+<!-- # usmapdata::state %>%  -->
+
+<!-- #   inner_join(laus::state_year, by = c("id" = "fips")) -> unem -->
+
+<!-- #  -->
+
+<!-- # # Plot a Map -->
+
+<!-- #  -->
+
+<!-- # library(gganimate) -->
+
+<!-- #  -->
+
+<!-- # ggplot() + -->
+
+<!-- #   geom_map(data = unem, map = unem, -->
+
+<!-- #            aes(x = long, y = lat, map_id = id, fill = unem_rate, frame = year), -->
+
+<!-- #            colour = alpha("white", 0.5), size=0.2) + -->
+
+<!-- #   coord_map("albers", lat0 = 30, lat1 = 40) + -->
+
+<!-- #   viridis::scale_fill_viridis(option = "B") + -->
+
+<!-- #   ggtitle("US Unemplyment Rates (%) by State in") + -->
+
+<!-- #   ggthemes::theme_map() + -->
+
+<!-- #   theme(legend.position = c(.85, .3), -->
+
+<!-- #         legend.title=element_blank(),  -->
+
+<!-- #         plot.title = element_text(hjust = 0.5)) -> g -->
+
+<!-- #  -->
+
+<!-- # gganimate(g) -->
+
+<!-- # ``` -->
+
 ![state-map](README/README-fig-state-map-.gif)
+
+<!-- # ```{r county-map, echo=FALSE} -->
+
+<!-- # usmapdata::county %>%  -->
+
+<!-- #         inner_join(laus::county_year, by = c("id" = "fips")) -> unem_county -->
+
+<!-- #  -->
+
+<!-- # ggplot() + -->
+
+<!-- #   geom_map(data = unem_county, map = unem_county, -->
+
+<!-- #            aes(x = long, y = lat, map_id = id, fill = unemployment_rate, frame = year), -->
+
+<!-- #            colour = alpha("white", 0.1), size=0.2) + -->
+
+<!-- #   geom_map(data = usmapdata::state, map = usmapdata::state, -->
+
+<!-- #            aes(x = long, y = lat, map_id = id), -->
+
+<!-- #            colour = alpha("white", 0.75), fill = "NA") +         -->
+
+<!-- #   coord_map("albers", lat0 = 30, lat1 = 40) + -->
+
+<!-- #   viridis::scale_fill_viridis(option = "B") + -->
+
+<!-- #   ggtitle("US Unemplyment Rates (%) by County in") + -->
+
+<!-- #   ggthemes::theme_map() + -->
+
+<!-- #   theme(legend.position = c(.85, .3), -->
+
+<!-- #         legend.title=element_blank(),  -->
+
+<!-- #         plot.title = element_text(hjust = 0.5)) -> c -->
+
+<!-- #  -->
+
+<!-- # gganimate(c) -->
+
+<!-- # ``` -->
 
 ![county-map](README/README-fig-county-map-.gif)
 
@@ -138,4 +228,4 @@ laus::county_year
 
 ![](README/README-fig-ts_unem_03_12_mon-1.png)
 
-![](README/README-fig-ts_unem_03_12_ann-1.png)
+![](README/README-fig-ts_unem_03_12_ann-1.png)<!-- -->
