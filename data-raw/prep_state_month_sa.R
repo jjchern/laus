@@ -1,5 +1,5 @@
 # Employment status of the civilian noninstitutional population, seasonaly adjusted monthly series
-# 1976.1 - 2017.11
+# 1976-01 - 2019-03
 # For more information, see https://www.bls.gov/web/laus.supp.toc.htm
 
 library(tidyverse)
@@ -8,7 +8,7 @@ library(tidyverse)
 
 url = "https://www.bls.gov/web/laus/ststdsadata.zip"
 fil = "data-raw/state_month/ststdsadata.zip"
-if (!file.exists(fil)) downloader::download(url, fil)
+downloader::download(url, fil)
 unzip(fil, exdir = "data-raw/state_month")
 list.files("data-raw/state_month")
 
@@ -18,6 +18,8 @@ readxl::read_excel(path = "data-raw/state_month/ststdsadata.xlsx",
                    col_name = c("fips", "state", "year", "month", "pop", "clf", "pc_clf", "emp", "pc_emp", "unem", "unem_rate"),
                    skip = 8) %>%
     print() -> state_month_sa
+
+state_month_sa %>% count(year, month) %>% print(n = 519)
 
 labelled::var_label(state_month_sa) = list(
         fips = "FIPS code",
@@ -44,5 +46,4 @@ state_month_sa %>%
 
 # Save it! ----------------------------------------------------------------
 
-devtools::use_data(state_month_sa, overwrite = TRUE)
-unlink("data-raw/ststdsadata.xlsx")
+usethis::use_data(state_month_sa, overwrite = TRUE)
