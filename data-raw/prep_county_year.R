@@ -4,7 +4,7 @@ library(tidyverse)
 
 # Download all Excel files ------------------------------------------------
 
-urls = paste0("https://www.bls.gov/lau/laucnty", c(90:99, formatC(0:16, width=2, flag=0)), ".xlsx")
+urls = paste0("https://www.bls.gov/lau/laucnty", c(90:99, formatC(0:18, width=2, flag=0)), ".xlsx")
 fils = paste0("data-raw/county_year/", basename(urls))
 map2(urls, fils, download.file)
 
@@ -54,4 +54,4 @@ county_year
 
 # Save it! ----------------------------------------------------------------
 
-devtools::use_data(county_year, overwrite = TRUE)
+usethis::use_data(county_year, overwrite = TRUE)
