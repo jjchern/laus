@@ -1,6 +1,6 @@
 Package: laus
 Title: U.S. Local Area Unemployment Statistics
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: person("JJ", "Chen", , "jiajia.chern@gmail.com", c("aut", "cre"))
 Description: An R data package contains Local Area Unemployment Statistics
     (LAUS) from U.S. Bureau of Labor Statistics (BLS).
