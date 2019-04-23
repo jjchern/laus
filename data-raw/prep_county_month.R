@@ -1,5 +1,5 @@
 
-# Labor force data by county, annual averages, 1990-2017.10
+# Labor force data by county, annual averages, 1990-01 - 2019-02
 
 library(tidyverse)
 
@@ -67,6 +67,10 @@ raw4 %>%
     print(n = 20) -> raw5
 
 # Don’t include annual average --------------------------------------------
-
+# And don't include 2019-03
 raw5 %>% filter(!is.na(month)) -> county_month_nsa
-devtools::use_data(county_month_nsa, overwrite = TRUE)
+
+county_month_nsa %>% count(year, month) %>% print(n = 351)
+county_month_nsa %>% filter(!(year == 2019 & month == "03")) -> county_month_nsa
+
+usethis::use_data(county_month_nsa, overwrite = TRUE)
