@@ -6,7 +6,7 @@ library(tidyverse)
 
 url = "http://www.bls.gov/lau/staadata.zip"
 fil = "data-raw/state_year/staadata.zip"
-if (!file.exists(fil)) downloader::download(url, fil)
+downloader::download(url, fil)
 unzip(fil, exdir = "data-raw/state_year")
 list.files("data-raw/state_year")
 
@@ -16,6 +16,8 @@ readxl::read_excel(path = "data-raw/state_year/staadata.xlsx",
                    col_name = c("fips", "state", "year", "pop", "clf", "pc_clf", "emp", "pc_emp", "unem", "unem_rate"),
                    skip = 8) %>%
     print() -> state_year
+
+state_year %>% count(year) %>% print(n = 43)
 
 labelled::var_label(state_year) = list(
         fips = "FIPS code",
