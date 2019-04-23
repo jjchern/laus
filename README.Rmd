@@ -9,7 +9,7 @@ editor_options:
 [![Travis-CI Build Status](https://travis-ci.org/jjchern/laus.svg?branch=master)](https://travis-ci.org/jjchern/laus)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/jjchern/laus?branch=master&svg=true)](https://ci.appveyor.com/project/jjchern/laus)
 
-```{r, echo = FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -54,15 +54,15 @@ opts_chunk$set(cache = TRUE, message = FALSE, warning = FALSE, fig.show = "anima
 An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. Bureau of Labor Statistics (BLS). So far it contains the following four series:
 
 -   `state_year`:
-    -   State-level employment status of the civilian noninstitutional population, annual average series (1976-2016)
+    -   State-level employment status of the civilian noninstitutional population, annual average series (1976-2018)
 -   `state_month_sa`:
-    -   State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2017.11)
+    -   State-level employment status of the civilian noninstitutional population, seasonaly adjusted monthly series (1976-2019.03)
 -   `state_month_nsa`:
-    -   State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2017.11)
+    -   State-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2019.03)
 -   `county_year`:
-    -   County-level employment status of the civilian noninstitutional population, annual average series (1990-2016)
+    -   County-level employment status of the civilian noninstitutional population, annual average series (1990-2018)
 -   `county_month_nsa`:
-    -   County-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2017.10)
+    -   County-level employment status of the civilian noninstitutional population, not seasonaly adjusted monthly series (1976-2019.02)
 
 ## Relevant packages
 
@@ -71,8 +71,8 @@ An R data package contains Local Area Unemployment Statistics (LAUS) from U.S. B
 # Installation
 
 ```R
-# install.package("devtools")
-devtools::install_github("jjchern/laus@v0.0.3")
+# install.package("remotes")
+remotes::install_github("jjchern/laus@v0.0.4")
 ```
 
 # Usage
@@ -174,8 +174,7 @@ laus::county_month_nsa %>%
              ymin = 4, ymax = Inf, alpha = 0.1) +
     labs(x = NULL, y = NULL,
          title = "Unemployment Rates of Selected Counties, 2002-2011") +
-    hrbrmisc::theme_hrbrmstr_sk(
-        strip_text_family = "Skia-Regular_Light-Condensed") +
+    hrbrthemes::theme_ipsum() +
     theme(legend.position = c(0.45, 0.8),
           legend.title = element_blank(),
           strip.text = element_text(hjust = 0.45))
@@ -202,7 +201,24 @@ laus::county_year %>%
               ymin = 4, ymax = Inf, alpha = 0.1) +
     labs(x = NULL, y = NULL,
           title = "Unemployment Rates of Selected Counties, 2002-2011") +
-    hrbrmisc::theme_hrbrmstr_sk() +
+    hrbrthemes::theme_ipsum() +
     theme(legend.position = c(0.45, 0.8),
           legend.title = element_blank())
+```
+
+```{r il, fig.show='asis', echo=FALSE}
+library(tidyverse)
+laus::state_month_nsa %>% 
+    filter(state == "Illinois") %>% 
+    mutate(year = factor(year)) %>% 
+    mutate(month = factor(month, labels = month.abb)) %>% 
+    ggplot(aes(x = year, y = month, fill = unem_rate)) +
+    geom_tile(colour = "white") +
+    scale_x_discrete(breaks = seq(1976, 2019, 7)) +
+    viridis::scale_fill_viridis(option = "D") +
+    labs(x = NULL, y = NULL) +
+    labs(fill = "", title = "Illinois Monthly Unemployment Rate, 1976-2019") +
+    theme(legend.position = "top",
+          legend.justification = "left",
+          plot.title = element_text(face = "bold", size = rel(1.4))) 
 ```
