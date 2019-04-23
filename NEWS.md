@@ -1,4 +1,12 @@
 
+# laus 0.0.4
+
+* Update all series in the package
+    - county monthly series (up to 2019-02)
+    - county annual series (up to 2018)
+    - state annual series (up to 2018)
+    - state monthly series (up to 2019-03)
+    
 # laus 0.0.3
 
 * Update all series in the package
