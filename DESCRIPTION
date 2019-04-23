@@ -10,4 +10,4 @@ License: CC0
 LazyData: true
 URL: https://github.com/jjchern/laus
 BugReports: https://github.com/jjchern/laus/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
